@@ -1,9 +1,9 @@
 
 resource "aws_s3_bucket" "example" {
-  bucket = "my_new_new_bucket_from_github_actions"
+  bucket = "mynameismishu-githubactions-bucket"
 
   tags = {
-    Name        = "My bucket"
+    Name        = "My simple bucket"
     Environment = "Dev"
   }
 }
