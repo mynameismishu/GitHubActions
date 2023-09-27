@@ -38,7 +38,11 @@ jobs:
         push: true
         context: .
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/planview:latest 
-      
+
+  deploy:      
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
     - name: Deploy Application using SSH
       uses: cross-the-world/ssh-scp-ssh-pipelines@latest
       env:
@@ -57,5 +61,5 @@ jobs:
         'k8smanifests/' => /tmp/Docker/
        last_ssh: |
         cd /tmp/Docker/
-        kubectl apply -f .
+        sudo kubectl apply -f .
         
