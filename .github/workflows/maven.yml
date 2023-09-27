@@ -55,8 +55,8 @@ jobs:
        port: 42006
        connect_timeout: 10s
        first_ssh: |
-        rm -rf /tmp/Docker
-        mkdir -p /tmp/Docker
+        rm -rf /tmp/Docker-new
+        mkdir -p /tmp/Docker-new
        scp: |
         'k8smanifests/' => /tmp/Docker/
        last_ssh: |
