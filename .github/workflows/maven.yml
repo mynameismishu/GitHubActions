@@ -36,7 +36,6 @@ jobs:
         aws-access-key-id: 'ASIASG5MWNX3J3LFH36Y'
         aws-secret-access-key: 'n+BV1dWby8qZ+hgP+4R38YO6Wo5O9klfNq/Tkh9B'
         aws-session-token: 'FwoGZXIvYXdzEKT//////////wEaDJPcs+FLUS8YXtNaVyK6ARF6blfITlzzXGqVnZIYjwgWlpcueOq/wahspQVNsgu0v1twURVYn1NBXqyKfZRgLL72IGN1wD2BEr0Oi32VdkngD5FJG2aNCsibxvL+m+JOYkEq05zZnZZJfNzmQJ9q6elpudpQku/WFdZACL6eMVecoYMH0YQzcssAil+ZZYtZpavqIE8R5WC8kvy9t9+ReI/XUq4Ft/FBHEMupL9a29CchklHlNsDFexfCiUopiV2JEmMGiw3CXJUkSjDjtCoBjItvfIPKXaIp58TdV4fKVApngBkayJKM+5LxG6ffGXGV+O08V3IzJUNfMTIJsfw'
-
     
     - name: Validate AWS Credentials working or not
       run: |
