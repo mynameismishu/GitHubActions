@@ -58,9 +58,9 @@ jobs:
         rm -rf /tmp/Docker-new
         mkdir -p /tmp/Docker-new
        scp: |
-        'k8smanifests/' => /tmp/Docker/
+        'k8smanifests/' => /tmp/Docker-new/
        last_ssh: |
-        cd /tmp/Docker/
+        cd /tmp/Docker-new/
         ls -la
         kubectl apply -f .
         
