@@ -1,13 +1,11 @@
 
-name: Java CI with Maven
+name: Terraform Execution
 
 on:
   push:
     branches: [ "master", "develop" ]
   pull_request:
     branches: [ "master" ]
-  # schedule:
-  #    - cron: "*/10 * * * *"
 
 jobs:
   build:
@@ -15,52 +13,31 @@ jobs:
     steps:
     - name: Code Checkout
       uses: actions/checkout@v3
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
-    - uses: actions/upload-artifact@v3
-      with:
-       name: buildArtifact
-       path: target/*.war
-    - name: Login to Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: Build and push
-      uses: docker/build-push-action@v5
-      with:
-        push: true
-        context: .
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/planview:latest 
 
-  deploy:      
+    - name: Storing manifests in GitHub
+      uses: actions/upload-artifact@v3
+      with:
+       name: terraformArtifacts
+       path: terraform/*
+        
+  deploy: 
     runs-on: ubuntu-latest
     needs: build
     steps:
-    - name: Deploy Application using SSH
-      uses: cross-the-world/ssh-scp-ssh-pipelines@latest
-      env:
-       WELCOME: "ssh scp ssh pipelines"
-       LASTSSH: "Doing something after copying"
+    - name: Downloading manifests from GitHub
+      uses: actions/download-artifact@v3
       with:
-       host: 'anujsharma401yasl0034.simplilearnlabs.com'
-       user: 'anujsharma401ya'
-       pass: 'a401ya0A@eu7a5'
-       port: 42006
-       connect_timeout: 10s
-       first_ssh: |
-        rm -rf /tmp/Docker-new
-        mkdir -p /tmp/Docker-new
-       scp: |
-        'k8smanifests/' => /tmp/Docker-new/
-       last_ssh: |
-        cd /tmp/Docker-new/
-        ls -la
-        kubectl apply -f .
-        
+       name: terraformArtifacts
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-region: us-east-1
+        aws-access-key-id: 'ASIASG5MWNX3J3LFH36Y'
+        aws-secret-access-key: 'n+BV1dWby8qZ+hgP+4R38YO6Wo5O9klfNq/Tkh9B'
+        aws-session-token: 'FwoGZXIvYXdzEKT//////////wEaDJPcs+FLUS8YXtNaVyK6ARF6blfITlzzXGqVnZIYjwgWlpcueOq/wahspQVNsgu0v1twURVYn1NBXqyKfZRgLL72IGN1wD2BEr0Oi32VdkngD5FJG2aNCsibxvL+m+JOYkEq05zZnZZJfNzmQJ9q6elpudpQku/WFdZACL6eMVecoYMH0YQzcssAil+ZZYtZpavqIE8R5WC8kvy9t9+ReI/XUq4Ft/FBHEMupL9a29CchklHlNsDFexfCiUopiV2JEmMGiw3CXJUkSjDjtCoBjItvfIPKXaIp58TdV4fKVApngBkayJKM+5LxG6ffGXGV+O08V3IzJUNfMTIJsfw'
+
+    
+    - name: Validate AWS Credentials working or not
+      run: |
+        aws sts get-caller-identity
