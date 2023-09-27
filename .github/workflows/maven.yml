@@ -6,8 +6,8 @@ on:
     branches: [ "master", "develop" ]
   pull_request:
     branches: [ "master" ]
-  schedule:
-     - cron: "*/10 * * * *"
+  # schedule:
+  #    - cron: "*/10 * * * *"
 
 jobs:
   build:
@@ -61,5 +61,5 @@ jobs:
         'k8smanifests/' => /tmp/Docker/
        last_ssh: |
         cd /tmp/Docker/
-        sudo kubectl apply -f .
+        kubectl apply -f .
         
