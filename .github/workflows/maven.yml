@@ -1,13 +1,13 @@
 
-name: Java CI with Maven & Docker
+name: Java CI with Maven
 
 on:
   push:
     branches: [ "master", "develop" ]
   pull_request:
     branches: [ "master" ]
-  # schedule:
-  #    - cron: "*/10 * * * *"
+  schedule:
+     - cron: "*/10 * * * *"
 
 jobs:
   build:
@@ -37,4 +37,23 @@ jobs:
       with:
         push: true
         context: .
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/planview:latest
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/planview:latest 
+      
+    - name: Deploy Application using SSH
+      uses: cross-the-world/ssh-scp-ssh-pipelines@latest
+      env:
+       WELCOME: "ssh scp ssh pipelines"
+       LASTSSH: "Doing something after copying"
+      with:
+       host: 'anujsharma401yasl0034.simplilearnlabs.com'
+       user: 'anujsharma401ya'
+       pass: 'a401ya0A@eu7a5'
+       port: 42006
+       connect_timeout: 10s
+       first_ssh: |
+        rm -rf /tmp/Docker
+        mkdir -p /tmp/Docker
+       scp: |
+        'Dockerfile' => /tmp/Docker
+       last_ssh: |
+        docker run -d ${{ secrets.DOCKERHUB_USERNAME }}/planview:latest 
